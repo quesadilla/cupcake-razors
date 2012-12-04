@@ -1,0 +1,108 @@
+
+assets_horror.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+open_closet
+  rotate: false
+  xy: 1, 570
+  size: 317, 448
+  orig: 317, 448
+  offset: 0, 0
+  index: -1
+close_closet
+  rotate: false
+  xy: 1, 137
+  size: 231, 431
+  orig: 231, 431
+  offset: 0, 0
+  index: -1
+fridge
+  rotate: false
+  xy: 234, 165
+  size: 244, 403
+  orig: 244, 403
+  offset: 0, 0
+  index: -1
+stand
+  rotate: false
+  xy: 320, 615
+  size: 159, 403
+  orig: 159, 403
+  offset: 0, 0
+  index: -1
+bed
+  rotate: false
+  xy: 481, 725
+  size: 407, 293
+  orig: 407, 293
+  offset: 0, 0
+  index: -1
+walk
+  rotate: false
+  xy: 890, 629
+  size: 131, 389
+  orig: 131, 389
+  offset: 0, 0
+  index: 3
+trash_can
+  rotate: false
+  xy: 481, 403
+  size: 193, 320
+  orig: 193, 320
+  offset: 0, 0
+  index: -1
+tree_normal
+  rotate: false
+  xy: 480, 1
+  size: 159, 400
+  orig: 159, 400
+  offset: 0, 0
+  index: -1
+broom
+  rotate: false
+  xy: 641, 15
+  size: 131, 386
+  orig: 131, 386
+  offset: 0, 0
+  index: -1
+tree_pine
+  rotate: false
+  xy: 774, 252
+  size: 169, 375
+  orig: 169, 375
+  offset: 0, 0
+  index: -1
+
+assets_horror2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+walk
+  rotate: false
+  xy: 1, 1
+  size: 158, 382
+  orig: 158, 382
+  offset: 0, 0
+  index: 2
+walk
+  rotate: false
+  xy: 1, 1
+  size: 158, 382
+  orig: 158, 382
+  offset: 0, 0
+  index: 4
+walk
+  rotate: false
+  xy: 161, 11
+  size: 165, 372
+  orig: 165, 372
+  offset: 0, 0
+  index: 1
+push
+  rotate: false
+  xy: 328, 21
+  size: 151, 362
+  orig: 151, 362
+  offset: 0, 0
+  index: -1
