@@ -19,7 +19,7 @@ import com.badlogic.gdx.InputProcessor;
 
 public class Game implements ApplicationListener {
 
-	// skipping screen width and height
+	// screen width and height
 	public static int SCREEN_WIDTH = 800;
 	public static int SCREEN_HEIGHT = 400;
 	
@@ -41,7 +41,6 @@ public class Game implements ApplicationListener {
 	boolean hiding;
 	BitmapFont font;
 	
-//	Vector2 smiley_pos;
 	
 	TextureAtlas atlas;
 	
