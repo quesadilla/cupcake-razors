@@ -46,7 +46,6 @@ public class Game implements ApplicationListener {
 	
 	@Override
 	public void create() {
-//		Gdx.app.log("HorrorGameLibGDXDesktop", "Game.create()");
 		
 		atlas = new TextureAtlas(Gdx.files.internal("assets/assets_horror.pack"));
 		
@@ -65,7 +64,6 @@ public class Game implements ApplicationListener {
 		font = new BitmapFont();
 		font.setColor(0,0,0,1);
 		
-		//texture = new Texture(Gdx.files.internal("assets/limbo.png"));
 		batch = new SpriteBatch();
 
 		player = new Rectangle();
@@ -74,60 +72,22 @@ public class Game implements ApplicationListener {
 		player.x = 100;
 		player.y = 100;
 		
-//		processor = new InputProcessor();
-	/*	
-		batcher = new SpriteBatch();
-		pixmap = new Pixmap(256, 256, Pixmap.Format.RGBA8888);
-		texture = new Texture(pixmap);
-		
-		smiley_pos = new Vector2(SCREEN_WIDTH/2 - 256/2, SCREEN_HEIGHT/2 - 256/2);
-		
-		DrawSmiley();
-		*/
-		
 	}
-/*
-	private void DrawSmiley()
-	{
-		Gdx.app.log("MyLibGDXGame", "Game.DrawSmiley()");
-		
-		pixmap.setColor(1, 1, 0, 1);
-		pixmap.fillCircle(256/2, 256/2, 256/2);
-		
-		pixmap.setColor(0, 0, 0, 1);
-		pixmap.fillCircle(256/2, 140, 80);
-		
-		pixmap.setColor(1, 1, 0, 1);
-		pixmap.fillCircle(256/2, 100, 100);
-		
-		pixmap.setColor(0, 0, 0, 1);
-		pixmap.fillCircle(256/3, 100, 30);
-		pixmap.fillCircle(256-256/3, 100, 30);
-		
-		texture.draw(pixmap, 0, 0);
-		texture.bind();
-		
-	}
-	*/
 	
 	@Override
 	public void dispose() {
-//		Gdx.app.log("HorrorGameLibGDXDesktop", "Game.dispose()");
 		
-/*		texture.dispose();
-		pixmap.dispose();
-		batcher.dispose();
-*/
 	}
 
 	@Override
 	public void pause() {
-//		Gdx.app.log("HorrorGameLibGDXDesktop", "Game.pause()");		
+	
 	}
 
 	@Override
 	public void render() {
-		
+
+		// move the player left
 		if(Gdx.input.isKeyPressed(Keys.LEFT) && !hiding)
 		{
 			if (!goingLeft) {
@@ -138,6 +98,7 @@ public class Game implements ApplicationListener {
 			goingLeft = true;
 		}
 			
+		// move the player right
 		if(Gdx.input.isKeyPressed(Keys.RIGHT) && !hiding)
 		{
 			if (goingLeft) {
@@ -150,6 +111,7 @@ public class Game implements ApplicationListener {
 		
 		timeHiding += Gdx.graphics.getDeltaTime();
 		
+		// make the player hide
 		if(Gdx.input.isKeyPressed(Keys.UP) && player.x > 390 && player.x < 450) {
 			if (timeHiding > .25)
 			{
@@ -170,50 +132,30 @@ public class Game implements ApplicationListener {
 		}
 		
 		if (!hiding) {
-		if (Gdx.input.isKeyPressed(Keys.SPACE)) {
-			batch.draw(playerPush, player.x, player.y, player.width, player.height);
-		} else if (!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			currentFrame = 0;
-			batch.draw(playerStand, player.x, player.y, player.width, player.height);
-		} else {
-			frameTime += Gdx.graphics.getDeltaTime();
-			if (frameTime > .25) {
-				frameTime = 0;
-				currentFrame++;
-				if (currentFrame > 3) {
-					currentFrame = 0;
-					if (currSpeed < 3) {
-						currSpeed++;
+			if (Gdx.input.isKeyPressed(Keys.SPACE)) {
+				batch.draw(playerPush, player.x, player.y, player.width, player.height);
+			} 
+			else if (!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)) {
+				currentFrame = 0;
+				batch.draw(playerStand, player.x, player.y, player.width, player.height);
+			} 
+			else {
+				frameTime += Gdx.graphics.getDeltaTime();
+				if (frameTime > .25) {
+					frameTime = 0;
+					currentFrame++;
+					if (currentFrame > 3) {
+						currentFrame = 0;
+						if (currSpeed < 3) {
+							currSpeed++;
+						}
 					}
 				}
+				batch.draw(playerWalk.get(currentFrame), player.x, player.y, player.width, player.height);
 			}
-			batch.draw(playerWalk.get(currentFrame), player.x, player.y, player.width, player.height);
-		}
 		}
 		batch.end();
 
-		
-		
-		
-		/*		float deltaTime=Gdx.graphics.getDeltaTime();
-		
-		GLCommon gl = Gdx.gl;
-		gl.glClearColor(0,0,0,1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_STENCIL_BUFFER_BIT);
-	
-		batcher.begin();
-		batcher.draw(texture, smiley_pos.x, smiley_pos.y);
-		batcher.end();
-		
-		if(200*deltaTime<4)
-			smiley_pos.x+=200*deltaTime;
-		
-		else
-			smiley_pos.x+=4;
-		
-		if(smiley_pos.x>SCREEN_WIDTH)
-			smiley_pos.x=-256;
-	*/	
 	}
 
 	@Override
@@ -223,7 +165,6 @@ public class Game implements ApplicationListener {
 
 	@Override
 	public void resume() {
-//		Gdx.app.log("HorrorGameLibGDXDesktop", "Game.resume()");
 		
 	}
 
