@@ -22,7 +22,8 @@ public class Game implements ApplicationListener {
 	// screen width and height
 	public static int SCREEN_WIDTH = 800;
 	public static int SCREEN_HEIGHT = 400;
-	
+
+	// Constants for game	
 	public static final int PLAYER_WALK = 1;
 	public static final int PLAYER_RUN = 3;
 	public static final int MONSTER_WALK = 2;
