@@ -43,6 +43,7 @@ public class Game implements ApplicationListener {
 	int currentFrame;
 	int currSpeed;
 	float frameTime;
+	float walkTime;
 	float timeHiding;
 	float totalWalkTime;
 	boolean goingLeft;
@@ -64,6 +65,7 @@ public class Game implements ApplicationListener {
 		playerWalk = atlas.findRegions("mainw");
 		playerRun = atlas.findRegions("mainr");
 		frameTime = 0;
+		walkTime = 0;
 		currentFrame = 0;
 		goingLeft = false;
 		timeHiding = 0;
@@ -97,6 +99,7 @@ public class Game implements ApplicationListener {
 	@Override
 	public void render() {
 
+		walkTime += Gdx.graphics.getDeltaTime();
 		// move the player left
 		if(Gdx.input.isKeyPressed(Keys.LEFT) && !hiding)
 		{
@@ -111,7 +114,11 @@ public class Game implements ApplicationListener {
 				currSpeed = PLAYER_WALK;
 				totalWalkTime = 0;
 			}
-			player.x -= currSpeed;
+			if(walkTime > .01)
+			{
+				player.x -= currSpeed;
+				walkTime = 0;
+			}
 			goingLeft = true;
 		}
 			
@@ -129,7 +136,11 @@ public class Game implements ApplicationListener {
 				currSpeed = PLAYER_WALK;
 				totalWalkTime = 0;
 			}
-			player.x += currSpeed;
+			if(walkTime > .01)
+			{
+				player.x += currSpeed;
+				walkTime = 0;
+			}
 			goingLeft = false;
 		}
 		
