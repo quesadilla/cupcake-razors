@@ -28,6 +28,8 @@ public class Game implements ApplicationListener {
 	public static final int PLAYER_RUN = 3;
 	public static final int MONSTER_WALK = 2;
 	public static final float PLAYER_RUN_DELAY = (float) 2.3;
+	public static final int GAME_PAUSED = 0;
+	public static final int GAME_START = 1;
 	
 	// things to draw
 	SpriteBatch batch;
@@ -36,12 +38,15 @@ public class Game implements ApplicationListener {
 	TextureRegion closet_close;
 	TextureRegion playerStand;
 	TextureRegion playerPush;
+//	TextureRegion monsterStand;
 	List<AtlasRegion> playerWalk;
 	List<AtlasRegion> playerRun;
 	InputProcessor processor;
 	Rectangle player;
+	Rectangle monster;
 	int currentFrame;
 	int currSpeed;
+	int gameStatus;
 	float frameTime;
 	float walkTime;
 	float timeHiding;
@@ -49,7 +54,6 @@ public class Game implements ApplicationListener {
 	boolean goingLeft;
 	boolean hiding;
 	BitmapFont font;
-	
 	
 	TextureAtlas atlas;
 	
@@ -64,6 +68,8 @@ public class Game implements ApplicationListener {
 		playerStand = atlas.findRegion("stand");
 		playerWalk = atlas.findRegions("mainw");
 		playerRun = atlas.findRegions("mainr");
+		// change this to make walking animation later
+//		monsterStand = atlas.findRegion("monsterwalk_1");
 		frameTime = 0;
 		walkTime = 0;
 		currentFrame = 0;
@@ -72,18 +78,27 @@ public class Game implements ApplicationListener {
 		hiding = false;
 		totalWalkTime = 0;
 		currSpeed = PLAYER_WALK;
+		gameStatus = 1; // NOTE: change this once start screen is made
 		
 		font = new BitmapFont();
 		font.setColor(0,0,0,1);
 		
 		batch = new SpriteBatch();
 
+		// player
 		player = new Rectangle();
 		player.width = 100;
 		player.height = 150;
 		player.x = 100;
 		player.y = 100;
 		
+		// monster
+/*		monster = new Rectangle();
+		monster.width = 550;
+		monster.height = 400;
+		monster.x = 50;
+		monster.y = 100;
+	*/	
 	}
 	
 	@Override
@@ -93,12 +108,29 @@ public class Game implements ApplicationListener {
 
 	@Override
 	public void pause() {
-	
 	}
 
 	@Override
 	public void render() {
 
+		// pause the game
+		if(Gdx.input.isKeyPressed(Keys.P) && gameStatus != GAME_PAUSED)
+		{
+			gameStatus = GAME_PAUSED;
+		}
+		
+		// continue the game
+		else
+		{
+			gameStatus = GAME_START;
+		}
+		
+		// move monster across the screen
+//		if(monster.x < SCREEN_WIDTH)
+//		{
+//			monster.x += MONSTER_WALK;
+//		}
+		
 		walkTime += Gdx.graphics.getDeltaTime();
 		// move the player left
 		if(Gdx.input.isKeyPressed(Keys.LEFT) && !hiding)
@@ -158,6 +190,7 @@ public class Game implements ApplicationListener {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		batch.begin();
+		
 		if (!hiding)
 			batch.draw(closet_open, 400, 100, 70, 120);
 		else
@@ -196,6 +229,9 @@ public class Game implements ApplicationListener {
 					batch.draw(playerRun.get(currentFrame), player.x, player.y, player.width, player.height);
 			}
 		}
+		
+// batch.draw(monsterStand, 25, 100, 550, 400);
+		
 		batch.end();
 
 	}
