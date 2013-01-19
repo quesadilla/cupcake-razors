@@ -1,0 +1,18 @@
+horrorgameatlas.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+horrorgamepause
+  rotate: false
+  xy: 0, 0
+  size: 800, 400
+  orig: 800, 400
+  offset: 0, 0
+  index: -1
+horrorgamestart
+  rotate: false
+  xy: 0, 624
+  size: 800, 400
+  orig: 800, 400
+  offset: 0, 0
+  index: -1

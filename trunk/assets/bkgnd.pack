@@ -1,0 +1,40 @@
+
+bkgnd.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Proto_Background
+  rotate: false
+  xy: 1, 304
+  size: 1600, 600
+  orig: 1600, 600
+  offset: 0, 0
+  index: -1
+Proto_Lockers
+  rotate: false
+  xy: 1, 1
+  size: 253, 301
+  orig: 253, 301
+  offset: 0, 0
+  index: -1
+Proto_OpenDoor
+  rotate: false
+  xy: 1603, 569
+  size: 169, 335
+  orig: 169, 335
+  offset: 0, 0
+  index: -1
+Proto_Table
+  rotate: false
+  xy: 256, 126
+  size: 302, 176
+  orig: 302, 176
+  offset: 0, 0
+  index: -1
+Proto_Barrels
+  rotate: false
+  xy: 1774, 707
+  size: 207, 197
+  orig: 207, 197
+  offset: 0, 0
+  index: -1
