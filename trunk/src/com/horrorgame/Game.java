@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Input.Keys;
+//import com.badlogic.gdx.Screen;
+//import com.badlogic.gdx.Game;
+
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
@@ -24,9 +27,9 @@ public class Game implements ApplicationListener {
 	public static int SCREEN_HEIGHT = 400;
 
 	// Constants for game	
-	public static final int PLAYER_WALK = 1;
-	public static final int PLAYER_RUN = 3;
-	public static final int MONSTER_WALK = 2;
+	public static final int PLAYER_WALK = 1; // speed of player walk
+	public static final int PLAYER_RUN = 3; // speed of player run
+	public static final int MONSTER_WALK = 2; // speed of monster walk
 	public static final float PLAYER_RUN_DELAY = (float) 2.3;
 	public static final int GAME_PAUSED = 0;
 	public static final int GAME_START = 1;
@@ -38,7 +41,7 @@ public class Game implements ApplicationListener {
 	TextureRegion closet_close;
 	TextureRegion playerStand;
 	TextureRegion playerPush;
-//	TextureRegion monsterStand;
+	List<AtlasRegion> monsterWalk;
 	List<AtlasRegion> playerWalk;
 	List<AtlasRegion> playerRun;
 	InputProcessor processor;
@@ -49,6 +52,7 @@ public class Game implements ApplicationListener {
 	int gameStatus;
 	float frameTime;
 	float walkTime;
+	float monsterWalkTime;
 	float timeHiding;
 	float totalWalkTime;
 	boolean goingLeft;
@@ -57,21 +61,31 @@ public class Game implements ApplicationListener {
 	
 	TextureAtlas atlas;
 	
+	public StartScreen getStartScreen()
+	{
+		return new StartScreen();
+	}
+	
 	@Override
 	public void create() {
 		
 		atlas = new TextureAtlas(Gdx.files.internal("assets/images.pack"));
 		
+		// find images from pack
 		closet_open = atlas.findRegion("open_closet");
 		closet_close = atlas.findRegion("close_closet");
+		
 		playerPush = atlas.findRegion("push");
 		playerStand = atlas.findRegion("stand");
 		playerWalk = atlas.findRegions("mainw");
 		playerRun = atlas.findRegions("mainr");
-		// change this to make walking animation later
-//		monsterStand = atlas.findRegion("monsterwalk_1");
+		
+		monsterWalk = atlas.findRegions("monsta");
+
+		// initialize speed variables
 		frameTime = 0;
 		walkTime = 0;
+		monsterWalkTime = 0;
 		currentFrame = 0;
 		goingLeft = false;
 		timeHiding = 0;
@@ -85,6 +99,8 @@ public class Game implements ApplicationListener {
 		
 		batch = new SpriteBatch();
 
+//		setScreen( (Screen)getStartScreen());
+		
 		// player
 		player = new Rectangle();
 		player.width = 100;
@@ -93,12 +109,12 @@ public class Game implements ApplicationListener {
 		player.y = 100;
 		
 		// monster
-/*		monster = new Rectangle();
-		monster.width = 550;
-		monster.height = 400;
+		monster = new Rectangle();
+		monster.width = 275;
+		monster.height = 200;
 		monster.x = 50;
 		monster.y = 100;
-	*/	
+	
 	}
 	
 	@Override
@@ -125,13 +141,24 @@ public class Game implements ApplicationListener {
 			gameStatus = GAME_START;
 		}
 		
-		// move monster across the screen
-//		if(monster.x < SCREEN_WIDTH)
-//		{
-//			monster.x += MONSTER_WALK;
-//		}
+		// monster walking
 		
+		for( int i = 0; i < monsterWalk.size(); i++)
+		{
+			monsterWalk.get(i);
+		}
+		
+		// controls rate of monster's speed
+		if(monsterWalkTime > .01)
+		{
+			monster.x += MONSTER_WALK;
+			monsterWalkTime = 0;
+		}
+		
+		// keeps track of player and monster walking time
 		walkTime += Gdx.graphics.getDeltaTime();
+		monsterWalkTime += Gdx.graphics.getDeltaTime();
+		
 		// move the player left
 		if(Gdx.input.isKeyPressed(Keys.LEFT) && !hiding)
 		{
@@ -146,6 +173,8 @@ public class Game implements ApplicationListener {
 				currSpeed = PLAYER_WALK;
 				totalWalkTime = 0;
 			}
+			
+			// controls rate of player's speed
 			if(walkTime > .01)
 			{
 				player.x -= currSpeed;
@@ -198,6 +227,9 @@ public class Game implements ApplicationListener {
 			batch.draw(closet_close,  410,  100,  50,  120);
 			font.draw(batch, "Narnia Discovered!", 370, 100);
 		}
+		
+		// monster
+		batch.draw(monsterWalk.get(currentFrame), monster.x, monster.y, monster.width, monster.height);
 		
 		if (!hiding) {
 			if (Gdx.input.isKeyPressed(Keys.SPACE)) {
