@@ -48,14 +48,17 @@ public class Game implements ApplicationListener {
 	Rectangle player;
 	Rectangle monster;
 	int currentFrame;
+	int monsterCurrentFrame;
 	int currSpeed;
 	int gameStatus;
 	float frameTime;
 	float walkTime;
 	float monsterWalkTime;
+	float currentMonsterFrameTime;
 	float timeHiding;
 	float totalWalkTime;
 	boolean goingLeft;
+	boolean monsterGoingLeft;
 	boolean hiding;
 	BitmapFont font;
 	
@@ -87,7 +90,10 @@ public class Game implements ApplicationListener {
 		walkTime = 0;
 		monsterWalkTime = 0;
 		currentFrame = 0;
+		monsterCurrentFrame = 0;
+		currentMonsterFrameTime = 0;
 		goingLeft = false;
+		monsterGoingLeft = true;
 		timeHiding = 0;
 		hiding = false;
 		totalWalkTime = 0;
@@ -112,7 +118,7 @@ public class Game implements ApplicationListener {
 		monster = new Rectangle();
 		monster.width = 275;
 		monster.height = 200;
-		monster.x = 50;
+		monster.x = 20;
 		monster.y = 100;
 	
 	}
@@ -142,22 +148,37 @@ public class Game implements ApplicationListener {
 		}
 		
 		// monster walking
-		
-		for( int i = 0; i < monsterWalk.size(); i++)
+		if(monsterGoingLeft)
 		{
-			monsterWalk.get(i);
+			for( int i = 0; i < monsterWalk.size(); i++)
+			{
+				monsterWalk.get(i).flip(true, false);
+			}
+			monsterGoingLeft = false;
 		}
 		
 		// controls rate of monster's speed
-		if(monsterWalkTime > .01)
+		if(monsterWalkTime > .02)
 		{
 			monster.x += MONSTER_WALK;
 			monsterWalkTime = 0;
 		}
+
+		if(currentMonsterFrameTime > .06)
+		{
+			monsterCurrentFrame++;
+			currentMonsterFrameTime = 0;
+		}
+		if(monsterCurrentFrame >= monsterWalk.size())
+		{
+			monsterCurrentFrame = 0;
+		}
+		
 		
 		// keeps track of player and monster walking time
 		walkTime += Gdx.graphics.getDeltaTime();
 		monsterWalkTime += Gdx.graphics.getDeltaTime();
+		currentMonsterFrameTime += Gdx.graphics.getDeltaTime();
 		
 		// move the player left
 		if(Gdx.input.isKeyPressed(Keys.LEFT) && !hiding)
@@ -197,10 +218,14 @@ public class Game implements ApplicationListener {
 				currSpeed = PLAYER_WALK;
 				totalWalkTime = 0;
 			}
-			if(walkTime > .01)
+			if(walkTime > .01 && player.x < SCREEN_WIDTH)
 			{
 				player.x += currSpeed;
 				walkTime = 0;
+			}
+			else if (player.x >= SCREEN_WIDTH || player.x < 0)
+			{
+				currSpeed = 0;
 			}
 			goingLeft = false;
 		}
@@ -229,7 +254,7 @@ public class Game implements ApplicationListener {
 		}
 		
 		// monster
-		batch.draw(monsterWalk.get(currentFrame), monster.x, monster.y, monster.width, monster.height);
+		batch.draw(monsterWalk.get(monsterCurrentFrame), monster.x, monster.y, monster.width, monster.height);
 		
 		if (!hiding) {
 			if (Gdx.input.isKeyPressed(Keys.SPACE)) {
