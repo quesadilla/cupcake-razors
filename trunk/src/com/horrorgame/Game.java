@@ -42,12 +42,18 @@ public class Game implements ApplicationListener {
 	TextureRegion playerStand;
 	TextureRegion playerPush;
 	TextureRegion mainBackground;
+	TextureRegion lockers;
+	TextureRegion door;
+	
 	List<AtlasRegion> monsterWalk;
 	List<AtlasRegion> playerWalk;
 	List<AtlasRegion> playerRun;
+
 	InputProcessor processor;
+
 	Rectangle player;
 	Rectangle monster;
+
 	int currentFrame;
 	int monsterCurrentFrame;
 	int currSpeed;
@@ -64,6 +70,7 @@ public class Game implements ApplicationListener {
 	BitmapFont font;
 	
 	TextureAtlas atlas;
+	TextureAtlas backgroundAtlas;
 	
 	public StartScreen getStartScreen()
 	{
@@ -74,11 +81,14 @@ public class Game implements ApplicationListener {
 	public void create() {
 		
 		atlas = new TextureAtlas(Gdx.files.internal("assets/images.pack"));
+		backgroundAtlas = new TextureAtlas(Gdx.files.internal("assets/bkgnd.pack"));
 		
 		// find images from pack
-		mainBackground = atlas.findRegion("Proto_Background");
+		mainBackground = backgroundAtlas.findRegion("Proto_Background");
+		lockers = backgroundAtlas.findRegion("Proto_Lockers");
+		door = backgroundAtlas.findRegion("Proto_OpenDoor");
 		closet_open = atlas.findRegion("open_closet");
-		closet_close = atlas.findRegion("close_closet");
+		closet_close = atlas.findRegion("close_closet");		
 		
 		playerPush = atlas.findRegion("push");
 		playerStand = atlas.findRegion("stand");
@@ -121,7 +131,7 @@ public class Game implements ApplicationListener {
 		monster.width = 275;
 		monster.height = 200;
 		monster.x = 20;
-		monster.y = 100;
+		monster.y = 75;
 	
 	}
 	
@@ -220,15 +230,15 @@ public class Game implements ApplicationListener {
 				currSpeed = PLAYER_WALK;
 				totalWalkTime = 0;
 			}
-			if(walkTime > .01 && player.x < SCREEN_WIDTH)
+			if(walkTime > .01)
 			{
 				player.x += currSpeed;
 				walkTime = 0;
 			}
-			else if (player.x >= SCREEN_WIDTH || player.x < 0)
-			{
-				currSpeed = 0;
-			}
+//			else if (player.x >= SCREEN_WIDTH)
+//			{
+//				currSpeed = 0;
+//			}
 			goingLeft = false;
 		}
 		
@@ -247,8 +257,12 @@ public class Game implements ApplicationListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		
-//		batch.draw(mainBackground, 100, 100, 800, 300);
+		// background and objects
+		batch.draw(mainBackground, 0, 0, 800, 400);
+		batch.draw(lockers, 100, 100, 125, 150);
+		batch.draw(door, 700, 98, 85, 165);
 		
+		// closet
 		if (!hiding)
 			batch.draw(closet_open, 400, 100, 70, 120);
 		else
