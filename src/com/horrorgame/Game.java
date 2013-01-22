@@ -223,8 +223,6 @@ public class Game implements ApplicationListener {
 		
 		player.draw(batch);
 		
-		font.draw(batch, Float.toString(player.getStamina()), 100, 50);
-		
 // batch.draw(monsterStand, 25, 100, 550, 400);
 		
 		batch.end();
