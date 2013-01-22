@@ -26,11 +26,8 @@ public class Game implements ApplicationListener {
 	public static int SCREEN_WIDTH = 800;
 	public static int SCREEN_HEIGHT = 400;
 
-	// Constants for game	
-	public static final int PLAYER_WALK = 1; // speed of player walk
-	public static final int PLAYER_RUN = 3; // speed of player run
+	// Constants for game
 	public static final int MONSTER_WALK = 2; // speed of monster walk
-	public static final float PLAYER_RUN_DELAY = (float) 2.3;
 	public static final int GAME_PAUSED = 0;
 	public static final int GAME_START = 1;
 	
@@ -39,19 +36,15 @@ public class Game implements ApplicationListener {
 	Texture texture;
 	TextureRegion closet_open;
 	TextureRegion closet_close;
-	TextureRegion playerStand;
-	TextureRegion playerPush;
 	TextureRegion mainBackground;
 	TextureRegion lockers;
 	TextureRegion door;
 	
 	List<AtlasRegion> monsterWalk;
-	List<AtlasRegion> playerWalk;
-	List<AtlasRegion> playerRun;
 
 	InputProcessor processor;
 
-	Rectangle player;
+	Player player;
 	Rectangle monster;
 
 	int currentFrame;
@@ -70,6 +63,7 @@ public class Game implements ApplicationListener {
 	BitmapFont font;
 	
 	TextureAtlas atlas;
+	TextureAtlas playerAtlas;
 	TextureAtlas backgroundAtlas;
 	
 	public StartScreen getStartScreen()
@@ -80,8 +74,11 @@ public class Game implements ApplicationListener {
 	@Override
 	public void create() {
 		
+		playerAtlas = new TextureAtlas(Gdx.files.internal("assets/player_images.pack"));
 		atlas = new TextureAtlas(Gdx.files.internal("assets/images.pack"));
 		backgroundAtlas = new TextureAtlas(Gdx.files.internal("assets/bkgnd.pack"));
+		
+		player = new Player(playerAtlas);
 		
 		// find images from pack
 		mainBackground = backgroundAtlas.findRegion("Proto_Background");
@@ -90,26 +87,15 @@ public class Game implements ApplicationListener {
 		closet_open = atlas.findRegion("open_closet");
 		closet_close = atlas.findRegion("close_closet");		
 		
-		playerPush = atlas.findRegion("push");
-		playerStand = atlas.findRegion("stand");
-		playerWalk = atlas.findRegions("mainw");
-		playerRun = atlas.findRegions("mainr");
-		
 		monsterWalk = atlas.findRegions("monsta");
 
 		// initialize speed variables
-		frameTime = 0;
-		walkTime = 0;
 		monsterWalkTime = 0;
 		currentFrame = 0;
 		monsterCurrentFrame = 0;
 		currentMonsterFrameTime = 0;
-		goingLeft = false;
 		monsterGoingLeft = true;
 		timeHiding = 0;
-		hiding = false;
-		totalWalkTime = 0;
-		currSpeed = PLAYER_WALK;
 		gameStatus = 1; // NOTE: change this once start screen is made
 		
 		font = new BitmapFont();
@@ -118,13 +104,6 @@ public class Game implements ApplicationListener {
 		batch = new SpriteBatch();
 
 //		setScreen( (Screen)getStartScreen());
-		
-		// player
-		player = new Rectangle();
-		player.width = 100;
-		player.height = 150;
-		player.x = 100;
-		player.y = 100;
 		
 		// monster
 		monster = new Rectangle();
@@ -188,69 +167,31 @@ public class Game implements ApplicationListener {
 		
 		
 		// keeps track of player and monster walking time
-		walkTime += Gdx.graphics.getDeltaTime();
 		monsterWalkTime += Gdx.graphics.getDeltaTime();
 		currentMonsterFrameTime += Gdx.graphics.getDeltaTime();
-		
-		// move the player left
-		if(Gdx.input.isKeyPressed(Keys.LEFT) && !hiding)
-		{
-			if (!goingLeft) {
-				playerPush.flip(true, false);
-				for (int i = 0; i < playerWalk.size(); i++) {
-					playerWalk.get(i).flip(true,  false);
-				}
-				for (int i = 0; i < playerRun.size(); i++) {
-					playerRun.get(i).flip(true,  false);
-				}
-				currSpeed = PLAYER_WALK;
-				totalWalkTime = 0;
-			}
-			
-			// controls rate of player's speed
-			if(walkTime > .01)
-			{
-				player.x -= currSpeed;
-				walkTime = 0;
-			}
-			goingLeft = true;
-		}
-			
-		// move the player right
-		if(Gdx.input.isKeyPressed(Keys.RIGHT) && !hiding)
-		{
-			if (goingLeft) {
-				playerPush.flip(true, false);
-				for (int i = 0; i < playerWalk.size(); i++) {
-					playerWalk.get(i).flip(true,  false);
-				}
-				for (int i = 0; i < playerRun.size(); i++) {
-					playerRun.get(i).flip(true,  false);
-				}
-				currSpeed = PLAYER_WALK;
-				totalWalkTime = 0;
-			}
-			if(walkTime > .01)
-			{
-				player.x += currSpeed;
-				walkTime = 0;
-			}
-//			else if (player.x >= SCREEN_WIDTH)
-//			{
-//				currSpeed = 0;
-//			}
-			goingLeft = false;
-		}
-		
 		timeHiding += Gdx.graphics.getDeltaTime();
+		player.update(Gdx.graphics.getDeltaTime());
 		
-		// make the player hide
-		if(Gdx.input.isKeyPressed(Keys.UP) && player.x > 390 && player.x < 450) {
-			if (timeHiding > .25)
-			{
-				hiding = !hiding;
-				timeHiding = 0;
+		if (Gdx.input.isKeyPressed(Keys.UP)) {
+			if (player.getX() > 390 && player.getX() < 450) {
+				if (timeHiding > .25)
+				{
+					if (player.isHiding()) {
+						player.stand();
+					} else {
+						player.hide();
+					}
+					timeHiding = 0;
+				}
 			}
+		} else if (Gdx.input.isKeyPressed(Keys.SPACE)) {
+			player.push();
+		} else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+			player.goLeft(Gdx.input.isKeyPressed(Keys.TAB));
+		} else if (Gdx.input.isKeyPressed(Keys.RIGHT) && !hiding) {
+			player.goRight(Gdx.input.isKeyPressed(Keys.TAB));
+		} else {
+			player.stand();
 		}
 		
 		Gdx.gl.glClearColor(1, 1, 1, 1);
@@ -274,36 +215,7 @@ public class Game implements ApplicationListener {
 		// monster
 		batch.draw(monsterWalk.get(monsterCurrentFrame), monster.x, monster.y, monster.width, monster.height);
 		
-		if (!hiding) {
-			if (Gdx.input.isKeyPressed(Keys.SPACE)) {
-				batch.draw(playerPush, player.x, player.y, player.width, player.height);
-			} 
-			else if (!Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT)) {
-				currentFrame = 0;
-				batch.draw(playerWalk.get(currentFrame), player.x, player.y, player.width, player.height);
-			} 
-			else {
-				frameTime += Gdx.graphics.getDeltaTime();
-				if (frameTime > .1) {
-					totalWalkTime += frameTime;
-					frameTime = 0;
-					currentFrame++;
-					if (totalWalkTime > PLAYER_RUN_DELAY) {
-						currSpeed = PLAYER_RUN;
-					}
-					if (currentFrame >= playerWalk.size()) {
-						currentFrame = 0;
-						//if (currSpeed < 3) {
-						//	currSpeed++;
-						//}
-					}
-				}
-				if (currSpeed == PLAYER_WALK)
-					batch.draw(playerWalk.get(currentFrame), player.x, player.y, player.width, player.height);
-				else
-					batch.draw(playerRun.get(currentFrame), player.x, player.y, player.width, player.height);
-			}
-		}
+		player.draw(batch);
 		
 // batch.draw(monsterStand, 25, 100, 550, 400);
 		
