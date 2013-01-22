@@ -46,7 +46,7 @@ public class Player {
 		width = 100;
 		height = 150;
 		x = 100;
-		y = 100;
+		y = 80;
 		stamina = STA_MAX;
 	}
 	

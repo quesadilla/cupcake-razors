@@ -15,11 +15,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+//import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Rectangle;
+//import com.badlogic.gdx.math.Rectangle;
 
 public class Game implements ApplicationListener {
 
@@ -34,12 +34,14 @@ public class Game implements ApplicationListener {
 	// things to draw
 	SpriteBatch batch;
 	Texture texture;
-	TextureRegion closet_open;
-	TextureRegion closet_close;
+//	TextureRegion closet_open;
+//	TextureRegion closet_close;
 	TextureRegion mainBackground;
 	TextureRegion lockers;
 	TextureRegion door;
-
+	TextureRegion barrels;
+	TextureRegion table;
+	
 	Player player;
 	List<Monster> monsters;
 
@@ -68,14 +70,16 @@ public class Game implements ApplicationListener {
 		player = new Player(playerAtlas);
 		
 		monsters = new ArrayList<Monster>();
-		monsters.add(new Monster(atlas, Monster.AI.PACER, 500, 75, false));
+		monsters.add(new Monster(atlas, Monster.AI.PACER, 500, 60, false));
 		
 		// find images from pack
 		mainBackground = backgroundAtlas.findRegion("Proto_Background");
 		lockers = backgroundAtlas.findRegion("Proto_Lockers");
 		door = backgroundAtlas.findRegion("Proto_OpenDoor");
-		closet_open = atlas.findRegion("open_closet");
-		closet_close = atlas.findRegion("close_closet");		
+		barrels = backgroundAtlas.findRegion("Proto_Barrels");
+		table = backgroundAtlas.findRegion("Proto_Table");
+//		closet_open = atlas.findRegion("open_closet");
+//		closet_close = atlas.findRegion("close_closet");		
 
 		// initialize speed variables
 		timeHiding = 0;
@@ -124,7 +128,7 @@ public class Game implements ApplicationListener {
 		}
 		
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			if (player.getX() > 390 && player.getX() < 450) {
+			if (player.getX() > 70 && player.getX() < 150) {
 				if (timeHiding > .25)
 				{
 					if (player.isHiding()) {
@@ -155,14 +159,16 @@ public class Game implements ApplicationListener {
 		batch.draw(mainBackground, 0, 0, 800, 400);
 		batch.draw(lockers, 100, 100, 125, 150);
 		batch.draw(door, 700, 98, 85, 165);
+		batch.draw(barrels, 5, 80, 105, 100);
+		batch.draw(table, 400, 75, 150, 85);
 		
 		// closet
-		if (!player.isHiding())
-			batch.draw(closet_open, 400, 100, 70, 120);
-		else
+//		if (!player.isHiding())
+//			batch.draw(closet_open, 400, 100, 70, 120);
+		if(player.isHiding())
 		{
-			batch.draw(closet_close,  410,  100,  50,  120);
-			font.draw(batch, "Narnia Discovered!", 370, 100);
+//			batch.draw(closet_close,  410,  100,  50,  120);
+			font.draw(batch, "Hiding place found!", 100, 100);
 		}
 		
 		for (int i = 0; i < monsters.size(); i++) {
@@ -170,8 +176,6 @@ public class Game implements ApplicationListener {
 		}
 		
 		player.draw(batch);
-		
-// batch.draw(monsterStand, 25, 100, 550, 400);
 		
 		batch.end();
 		
