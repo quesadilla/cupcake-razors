@@ -155,12 +155,16 @@ public class Player {
 		}
 	}
 	
-	public void push() {
+	public void push(List<Monster> monsters) {
 		if (playerState != STATE.HIDE && stamina >= STA_PUSH_COST) {
 			if (playerState != STATE.PUSH) {
 				stamina -= STA_PUSH_COST;
+				playerState = STATE.PUSH;
+				
+				for (int i = 0; i < monsters.size(); i++) {
+					// see if monster is in range
+				}
 			}
-			playerState = STATE.PUSH;
 		}
 	}
 	
@@ -212,6 +216,18 @@ public class Player {
 	
 	public int getY() {
 		return y;
+	}
+	
+	public int getCenterX() {
+		return x + width/2;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
 	}
 	
 	public float getStamina() {
