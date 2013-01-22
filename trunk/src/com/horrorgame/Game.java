@@ -16,6 +16,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 
 import com.badlogic.gdx.InputProcessor;
@@ -57,10 +59,10 @@ public class Game implements ApplicationListener {
 	float currentMonsterFrameTime;
 	float timeHiding;
 	float totalWalkTime;
-	boolean goingLeft;
 	boolean monsterGoingLeft;
-	boolean hiding;
+	
 	BitmapFont font;
+	ShapeRenderer shapeRenderer;
 	
 	TextureAtlas atlas;
 	TextureAtlas playerAtlas;
@@ -100,6 +102,8 @@ public class Game implements ApplicationListener {
 		
 		font = new BitmapFont();
 		font.setColor(0,0,0,1);
+		
+		shapeRenderer = new ShapeRenderer();
 		
 		batch = new SpriteBatch();
 
@@ -188,10 +192,12 @@ public class Game implements ApplicationListener {
 			player.push();
 		} else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 			player.goLeft(Gdx.input.isKeyPressed(Keys.TAB));
-		} else if (Gdx.input.isKeyPressed(Keys.RIGHT) && !hiding) {
+		} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			player.goRight(Gdx.input.isKeyPressed(Keys.TAB));
 		} else {
-			player.stand();
+			if (!player.isHiding()) {
+				player.stand();
+			}
 		}
 		
 		Gdx.gl.glClearColor(1, 1, 1, 1);
@@ -204,7 +210,7 @@ public class Game implements ApplicationListener {
 		batch.draw(door, 700, 98, 85, 165);
 		
 		// closet
-		if (!hiding)
+		if (!player.isHiding())
 			batch.draw(closet_open, 400, 100, 70, 120);
 		else
 		{
@@ -217,9 +223,22 @@ public class Game implements ApplicationListener {
 		
 		player.draw(batch);
 		
+		font.draw(batch, Float.toString(player.getStamina()), 100, 50);
+		
 // batch.draw(monsterStand, 25, 100, 550, 400);
 		
 		batch.end();
+		
+		// Draw player Stamina bar
+		shapeRenderer.begin(ShapeType.FilledRectangle);
+		shapeRenderer.setColor(0, 1, 0, 1);
+		shapeRenderer.filledRect(50, 375, player.getStamina(), 20);
+		shapeRenderer.end();
+		
+		shapeRenderer.begin(ShapeType.Rectangle);
+		shapeRenderer.setColor(0, 0, 0, 1);
+		shapeRenderer.rect(50, 375, player.STA_MAX, 20);
+		shapeRenderer.end();
 
 	}
 

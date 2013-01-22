@@ -12,6 +12,10 @@ public class Player {
 	
 	public static final int PLAYER_WALK = 1; // speed of player walk
 	public static final int PLAYER_RUN = 3; // speed of player run
+	public static final float STA_MAX = (float) 100;
+	public static final float STA_REGEN = (float) 0.5;
+	public static final float STA_RUN_COST = (float) 0.5;
+	public static final float STA_PUSH_COST = (float) 50;
 	
 	private TextureRegion playerStand;
 	private List<AtlasRegion> playerPush;
@@ -43,7 +47,7 @@ public class Player {
 		height = 150;
 		x = 100;
 		y = 100;
-		stamina = 100;
+		stamina = STA_MAX;
 	}
 	
 	public void update(float timeDelta)
@@ -66,34 +70,37 @@ public class Player {
 			}
 		}
 		
-		if (playerState == STATE.WALK && moveTime > .01) {
-			if (facingLeft) {
-				x -= PLAYER_WALK;
-			} else {
-				x += PLAYER_WALK;
-			}
-		} else if (playerState == STATE.RUN && moveTime > .01) {
-			if (facingLeft) {
-				if (stamina > 0)
-					x -= PLAYER_RUN;
-				else
-					x -= PLAYER_WALK;
-			} else {
-				if (stamina > 0)
-					x += PLAYER_RUN;
-				else
-					x += PLAYER_WALK;
+		if (moveTime > .01) {
+			moveTime = 0;
+			if (playerState != STATE.RUN) {
+				if (stamina < 100) {
+					stamina += STA_REGEN;
+				} 
 			}
 			
-			if (stamina > 0) {
-				stamina -= .5;
-			} 
-		}
-		
-		if (playerState != STATE.RUN) {
-			if (stamina < 100) {
-				stamina += 1;
-			} 
+			if (playerState == STATE.WALK) {
+				if (facingLeft) {
+					x -= PLAYER_WALK;
+				} else {
+					x += PLAYER_WALK;
+				}
+			} else if (playerState == STATE.RUN) {
+				if (facingLeft) {
+					if (stamina > 0)
+						x -= PLAYER_RUN;
+					else
+						x -= PLAYER_WALK;
+				} else {
+					if (stamina > 0)
+						x += PLAYER_RUN;
+					else
+						x += PLAYER_WALK;
+				}
+				
+				if (stamina > 0) {
+					stamina -= STA_RUN_COST;
+				}
+			}
 		}
 	}
 	
@@ -149,7 +156,10 @@ public class Player {
 	}
 	
 	public void push() {
-		if (playerState != STATE.HIDE) {
+		if (playerState != STATE.HIDE && stamina >= STA_PUSH_COST) {
+			if (playerState != STATE.PUSH) {
+				stamina -= STA_PUSH_COST;
+			}
 			playerState = STATE.PUSH;
 		}
 	}
@@ -202,6 +212,10 @@ public class Player {
 	
 	public int getY() {
 		return y;
+	}
+	
+	public float getStamina() {
+		return stamina;
 	}
 	
 	public boolean isHiding() {
