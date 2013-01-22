@@ -1,5 +1,6 @@
 package com.horrorgame;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -20,8 +21,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 
-import com.badlogic.gdx.InputProcessor;
-
 public class Game implements ApplicationListener {
 
 	// screen width and height
@@ -29,7 +28,6 @@ public class Game implements ApplicationListener {
 	public static int SCREEN_HEIGHT = 400;
 
 	// Constants for game
-	public static final int MONSTER_WALK = 2; // speed of monster walk
 	public static final int GAME_PAUSED = 0;
 	public static final int GAME_START = 1;
 	
@@ -41,25 +39,12 @@ public class Game implements ApplicationListener {
 	TextureRegion mainBackground;
 	TextureRegion lockers;
 	TextureRegion door;
-	
-	List<AtlasRegion> monsterWalk;
-
-	InputProcessor processor;
 
 	Player player;
-	Rectangle monster;
+	List<Monster> monsters;
 
-	int currentFrame;
-	int monsterCurrentFrame;
-	int currSpeed;
 	int gameStatus;
-	float frameTime;
-	float walkTime;
-	float monsterWalkTime;
-	float currentMonsterFrameTime;
 	float timeHiding;
-	float totalWalkTime;
-	boolean monsterGoingLeft;
 	
 	BitmapFont font;
 	ShapeRenderer shapeRenderer;
@@ -82,21 +67,17 @@ public class Game implements ApplicationListener {
 		
 		player = new Player(playerAtlas);
 		
+		monsters = new ArrayList<Monster>();
+		monsters.add(new Monster(atlas, Monster.AI.PACER, 500, 75, false));
+		
 		// find images from pack
 		mainBackground = backgroundAtlas.findRegion("Proto_Background");
 		lockers = backgroundAtlas.findRegion("Proto_Lockers");
 		door = backgroundAtlas.findRegion("Proto_OpenDoor");
 		closet_open = atlas.findRegion("open_closet");
 		closet_close = atlas.findRegion("close_closet");		
-		
-		monsterWalk = atlas.findRegions("monsta");
 
 		// initialize speed variables
-		monsterWalkTime = 0;
-		currentFrame = 0;
-		monsterCurrentFrame = 0;
-		currentMonsterFrameTime = 0;
-		monsterGoingLeft = true;
 		timeHiding = 0;
 		gameStatus = 1; // NOTE: change this once start screen is made
 		
@@ -108,14 +89,6 @@ public class Game implements ApplicationListener {
 		batch = new SpriteBatch();
 
 //		setScreen( (Screen)getStartScreen());
-		
-		// monster
-		monster = new Rectangle();
-		monster.width = 275;
-		monster.height = 200;
-		monster.x = 20;
-		monster.y = 75;
-	
 	}
 	
 	@Override
@@ -142,39 +115,13 @@ public class Game implements ApplicationListener {
 			gameStatus = GAME_START;
 		}
 		
-		// monster walking
-		if(monsterGoingLeft)
-		{
-			for( int i = 0; i < monsterWalk.size(); i++)
-			{
-				monsterWalk.get(i).flip(true, false);
-			}
-			monsterGoingLeft = false;
-		}
-		
-		// controls rate of monster's speed
-		if(monsterWalkTime > .02)
-		{
-			monster.x += MONSTER_WALK;
-			monsterWalkTime = 0;
-		}
-
-		if(currentMonsterFrameTime > .06)
-		{
-			monsterCurrentFrame++;
-			currentMonsterFrameTime = 0;
-		}
-		if(monsterCurrentFrame >= monsterWalk.size())
-		{
-			monsterCurrentFrame = 0;
-		}
-		
 		
 		// keeps track of player and monster walking time
-		monsterWalkTime += Gdx.graphics.getDeltaTime();
-		currentMonsterFrameTime += Gdx.graphics.getDeltaTime();
 		timeHiding += Gdx.graphics.getDeltaTime();
 		player.update(Gdx.graphics.getDeltaTime());
+		for (int i = 0; i < monsters.size(); i++) {
+			monsters.get(i).update(Gdx.graphics.getDeltaTime(), player);
+		}
 		
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
 			if (player.getX() > 390 && player.getX() < 450) {
@@ -189,7 +136,7 @@ public class Game implements ApplicationListener {
 				}
 			}
 		} else if (Gdx.input.isKeyPressed(Keys.SPACE)) {
-			player.push();
+			player.push(monsters);
 		} else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 			player.goLeft(Gdx.input.isKeyPressed(Keys.TAB));
 		} else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
@@ -218,8 +165,9 @@ public class Game implements ApplicationListener {
 			font.draw(batch, "Narnia Discovered!", 370, 100);
 		}
 		
-		// monster
-		batch.draw(monsterWalk.get(monsterCurrentFrame), monster.x, monster.y, monster.width, monster.height);
+		for (int i = 0; i < monsters.size(); i++) {
+			monsters.get(i).draw(batch);
+		}
 		
 		player.draw(batch);
 		
