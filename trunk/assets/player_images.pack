@@ -1,0 +1,155 @@
+
+player_images.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+push
+  rotate: false
+  xy: 1, 1
+  size: 255, 300
+  orig: 255, 300
+  offset: 0, 0
+  index: 2
+idle
+  rotate: false
+  xy: 258, 1
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: -1
+push
+  rotate: false
+  xy: 460, 1
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 1
+GRATEST
+  rotate: false
+  xy: 662, 77
+  size: 203, 224
+  orig: 203, 224
+  offset: 0, 0
+  index: -1
+
+player_images2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+run/mainr
+  rotate: false
+  xy: 1, 605
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 1
+run/mainr
+  rotate: false
+  xy: 1, 303
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 2
+run/mainr
+  rotate: false
+  xy: 203, 605
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 3
+run/mainr
+  rotate: false
+  xy: 1, 1
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 4
+run/mainr
+  rotate: false
+  xy: 203, 303
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 5
+run/mainr
+  rotate: false
+  xy: 405, 605
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 6
+run/mainr
+  rotate: false
+  xy: 203, 1
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 7
+run/mainr
+  rotate: false
+  xy: 405, 303
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 8
+
+player_images3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+walk/mainw
+  rotate: false
+  xy: 1, 605
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 1
+walk/mainw
+  rotate: false
+  xy: 1, 303
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 2
+walk/mainw
+  rotate: false
+  xy: 203, 605
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 3
+walk/mainw
+  rotate: false
+  xy: 1, 1
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 4
+walk/mainw
+  rotate: false
+  xy: 203, 303
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 5
+walk/mainw
+  rotate: false
+  xy: 405, 605
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 6
+walk/mainw
+  rotate: false
+  xy: 203, 1
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 7
+walk/mainw
+  rotate: false
+  xy: 405, 303
+  size: 200, 300
+  orig: 200, 300
+  offset: 0, 0
+  index: 8
