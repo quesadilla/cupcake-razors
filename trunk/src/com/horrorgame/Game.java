@@ -41,6 +41,7 @@ public class Game implements ApplicationListener {
 	TextureRegion closet_close;
 	TextureRegion playerStand;
 	TextureRegion playerPush;
+	TextureRegion mainBackground;
 	List<AtlasRegion> monsterWalk;
 	List<AtlasRegion> playerWalk;
 	List<AtlasRegion> playerRun;
@@ -75,6 +76,7 @@ public class Game implements ApplicationListener {
 		atlas = new TextureAtlas(Gdx.files.internal("assets/images.pack"));
 		
 		// find images from pack
+		mainBackground = atlas.findRegion("Proto_Background");
 		closet_open = atlas.findRegion("open_closet");
 		closet_close = atlas.findRegion("close_closet");
 		
@@ -244,6 +246,8 @@ public class Game implements ApplicationListener {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		batch.begin();
+		
+//		batch.draw(mainBackground, 100, 100, 800, 300);
 		
 		if (!hiding)
 			batch.draw(closet_open, 400, 100, 70, 120);
