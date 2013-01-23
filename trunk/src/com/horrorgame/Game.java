@@ -70,7 +70,7 @@ public class Game implements ApplicationListener {
 		player = new Player(playerAtlas);
 		
 		monsters = new ArrayList<Monster>();
-		monsters.add(new Monster(atlas, Monster.AI.PACER, 500, 60, false));
+		monsters.add(new Monster(atlas, Monster.AI.PACER, 500, 53, false));
 		
 		// find images from pack
 		mainBackground = backgroundAtlas.findRegion("Proto_Background");
@@ -157,7 +157,7 @@ public class Game implements ApplicationListener {
 		
 		// background and objects
 		batch.draw(mainBackground, 0, 0, 800, 400);
-		batch.draw(lockers, 100, 100, 125, 150);
+		batch.draw(lockers, 100, 85, 125, 150);
 		batch.draw(door, 700, 98, 85, 165);
 		batch.draw(barrels, 5, 80, 105, 100);
 		batch.draw(table, 400, 75, 150, 85);
