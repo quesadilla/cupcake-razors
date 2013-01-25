@@ -234,6 +234,10 @@ public class Player {
 		return stamina;
 	}
 	
+	public boolean facingLeft() {
+		return facingLeft;
+	}
+	
 	public boolean isHiding() {
 		return playerState == STATE.HIDE;
 	}
