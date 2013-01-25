@@ -204,17 +204,7 @@ public class Game implements ApplicationListener {
 		
 		batch.end();
 		
-		// Draw player Stamina bar
-		shapeRenderer.begin(ShapeType.FilledRectangle);
-		shapeRenderer.setColor(0, 1, 0, 1);
-		shapeRenderer.filledRect(50, 375, player.getStamina(), 20);
-		shapeRenderer.end();
-		
-		shapeRenderer.begin(ShapeType.Rectangle);
-		shapeRenderer.setColor(0, 0, 0, 1);
-		shapeRenderer.rect(50, 375, player.STA_MAX, 20);
-		shapeRenderer.end();
-		
+		// Draw lights!
 		lighting.begin();
 		batch.begin();
 		batch.draw(shadow, 0, 0, 1024, 1024);
@@ -232,6 +222,17 @@ public class Game implements ApplicationListener {
 		batch.begin();
 		batch.draw(lighting.getColorBufferTexture(), 0, 0);
 		batch.end();
+		
+		// Draw player Stamina bar
+				shapeRenderer.begin(ShapeType.FilledRectangle);
+				shapeRenderer.setColor(0, 1, 0, 1);
+				shapeRenderer.filledRect(50, 375, player.getStamina(), 20);
+				shapeRenderer.end();
+				
+				shapeRenderer.begin(ShapeType.Rectangle);
+				shapeRenderer.setColor(1, 1, 1, 1);
+				shapeRenderer.rect(50, 375, player.STA_MAX, 20);
+				shapeRenderer.end();
 		
 		/*
 		//Gdx.gl.glEnable(GL10.GL_BLEND);
