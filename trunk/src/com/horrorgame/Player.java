@@ -162,7 +162,12 @@ public class Player {
 				playerState = STATE.PUSH;
 				
 				for (int i = 0; i < monsters.size(); i++) {
-					// see if monster is in range
+					if (getCenterX() - monsters.get(i).getCenterX() < 50 && getCenterX() - monsters.get(i).getCenterX() > 0) {
+						monsters.get(i).stumbleLeft();
+					}
+					if (monsters.get(i).getCenterX() - getCenterX() < 50 && monsters.get(i).getCenterX() - getCenterX() > 0) {
+						monsters.get(i).stumbleRight();
+					}
 				}
 			}
 		}
