@@ -11,18 +11,25 @@ import com.badlogic.gdx.Input.Keys;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 //import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 //import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Matrix4;
 
 public class Game implements ApplicationListener {
-
+	
 	// screen width and height
 	public static int SCREEN_WIDTH = 800;
 	public static int SCREEN_HEIGHT = 400;
@@ -41,6 +48,12 @@ public class Game implements ApplicationListener {
 	TextureRegion door;
 	TextureRegion barrels;
 	TextureRegion table;
+	
+	Texture shadow;
+	Texture spotlight;
+	Texture reddoorlight;
+	
+	FrameBuffer lighting;
 	
 	Player player;
 	List<Monster> monsters;
@@ -72,6 +85,18 @@ public class Game implements ApplicationListener {
 		monsters = new ArrayList<Monster>();
 		monsters.add(new Monster(atlas, Monster.AI.PACER, 500, 53, false));
 		
+		Pixmap temp = new Pixmap(1024, 1024, Pixmap.Format.RGBA8888);
+		temp.setColor(0,0,0,.96f);
+		temp.fillRectangle(0, 0, 1024, 1024);
+		shadow = new Texture(temp);
+		temp.dispose();
+		temp = new Pixmap(Gdx.files.internal("assets/flashlight.png"));
+		spotlight = new Texture(temp);
+		temp.dispose();
+		temp = new Pixmap(Gdx.files.internal("assets/red_door_light.png"));
+		reddoorlight = new Texture(temp);
+		temp.dispose();
+		
 		// find images from pack
 		mainBackground = backgroundAtlas.findRegion("Proto_Background");
 		lockers = backgroundAtlas.findRegion("Proto_Lockers");
@@ -91,7 +116,9 @@ public class Game implements ApplicationListener {
 		shapeRenderer = new ShapeRenderer();
 		
 		batch = new SpriteBatch();
-
+		
+		lighting = new FrameBuffer(Pixmap.Format.RGBA8888, 800, 600, false);
+		
 //		setScreen( (Screen)getStartScreen());
 	}
 	
@@ -150,9 +177,7 @@ public class Game implements ApplicationListener {
 				player.stand();
 			}
 		}
-		
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+			
 		batch.begin();
 		
 		// background and objects
@@ -189,7 +214,44 @@ public class Game implements ApplicationListener {
 		shapeRenderer.setColor(0, 0, 0, 1);
 		shapeRenderer.rect(50, 375, player.STA_MAX, 20);
 		shapeRenderer.end();
-
+		
+		lighting.begin();
+		batch.begin();
+		batch.draw(shadow, 0, 0, 1024, 1024);
+		if (!player.facingLeft()) {
+			batch.draw(spotlight, player.getX(), 225, 2*player.getWidth(), player.getHeight());
+		} else {
+			batch.draw(spotlight, player.getX() - player.getWidth(), 225, 2*player.getWidth(), player.getHeight());
+		}
+		batch.draw(reddoorlight, 721, 230, 6, 6);
+		batch.draw(reddoorlight, 730, 230, 6, 6);
+		batch.draw(reddoorlight, 739, 230, 6, 6);
+		batch.end();
+		lighting.end();
+		
+		batch.begin();
+		batch.draw(lighting.getColorBufferTexture(), 0, 0);
+		batch.end();
+		
+		/*
+		//Gdx.gl.glEnable(GL10.GL_BLEND);
+		//Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glColorMask(true, true, true, true);
+		batch.begin();
+		batch.draw(shadow, 0, 0, 1024, 1024);
+		//batch.setBlendFunction(GL10.GL_ONE_MINUS_DST_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		batch.end();
+		
+		Gdx.gl.glColorMask(true, true, true, true);
+		batch.begin();
+		batch.draw(spotlight, player.getX(), player.getY(), 128, 128);
+		batch.end();
+		Gdx.gl.glColorMask(true, true, true, true);
+		shapeRenderer.begin(ShapeType.FilledRectangle);
+		shapeRenderer.setColor(0,0,0,.85f);
+		shapeRenderer.filledRect(0, 0, 800, 600);
+		shapeRenderer.end();
+		*/
 	}
 
 	@Override
@@ -201,5 +263,4 @@ public class Game implements ApplicationListener {
 	public void resume() {
 		
 	}
-
 }
